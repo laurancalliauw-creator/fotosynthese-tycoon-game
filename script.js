@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const bpsDiv = document.getElementById("bps");
     const clickValueDisplay = document.getElementById("clickValueDisplay");
     const resetButton = document.getElementById("resetGame");
+    const cheatButton = document.getElementById("cheat");
 
     const btnGarage = document.getElementById("Zonlicht");
     const btnFabriek = document.getElementById("koopFabriek");

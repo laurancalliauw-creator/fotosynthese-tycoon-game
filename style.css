@@ -139,3 +139,22 @@ body {
 button{
     border-radius: 15px;
 }
+button {
+    transition: 0.2s ease;
+}
+
+button.disabled-upgrade {
+    background-color: #999 !important;
+    opacity: 0.6;
+    cursor: not-allowed !important;
+}
+
+button.enabled-upgrade {
+    background-color: #4CAF50;
+    opacity: 1;
+    cursor: pointer;
+}
+
+button.enabled-upgrade:hover {
+    transform: scale(1.05);
+}

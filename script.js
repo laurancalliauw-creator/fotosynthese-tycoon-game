@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function updateClickValueDisplay(clickValue) {
-        clickValueDisplay.textContent = `Banden per klik: ${clickValue}`;
+        clickValueDisplay.textContent = `energie per klik: ${clickValue}`;
     }
 
     function koopUpgrade(type) {
@@ -203,7 +203,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 updateBpsDisplay(calculateBps());
                 updateClickValueDisplay(calculateClickValue());
                 saveGame();
-                alert("Succes! Je hebt 100000 banden gekregen.");
+                alert("Succes! Je hebt 100000 energie gekregen.");
             } else {
                 alert("Fout wachtwoord!");
             }

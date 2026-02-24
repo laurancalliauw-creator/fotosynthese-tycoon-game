@@ -81,7 +81,31 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             up.button.textContent = desc;
         }
+    }function updateUpgradeButtons() {
+    for (const key in upgrades) {
+        const up = upgrades[key];
+        const genoegGeld = energie >= up.price;
+
+        up.button.disabled = !genoegGeld;
+
+        if (genoegGeld) {
+            up.button.classList.remove("disabled-upgrade");
+            up.button.classList.add("enabled-upgrade");
+        } else {
+            up.button.classList.remove("enabled-upgrade");
+            up.button.classList.add("disabled-upgrade");
+        }
+
+        let desc = "";
+        if (up.type === "bps") {
+            desc = `Koop ${capitalize(key)} (+${up.power} energie/s) (${up.price} energie) - Je hebt ${up.count}`;
+        } else {
+            desc = `Koop ${capitalize(key)} (+${up.power} per klik) (${up.price} energie) - Je hebt ${up.count}`;
+        }
+
+        up.button.textContent = desc;
     }
+}
 
     function updateBpsDisplay(bps) {
         bpsDiv.textContent = `Totale fotosynthese: ${bps} energie/s`;

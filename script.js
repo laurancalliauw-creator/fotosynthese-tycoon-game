@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const clickValueDisplay = document.getElementById("clickValueDisplay");
     const resetButton = document.getElementById("resetGame");
 
-    const btnGarage = document.getElementById("koopGarage");
+    const btnGarage = document.getElementById("Zonlicht");
     const btnFabriek = document.getElementById("koopFabriek");
     const btnMega = document.getElementById("koopMega");
     const btnMegaPlus = document.getElementById("koopMegaPlus");

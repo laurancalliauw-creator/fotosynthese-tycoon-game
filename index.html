@@ -4,7 +4,168 @@
 <head>
     <meta charset="UTF-8" />
     <title>Fotosynthesis Clicker</title>
-    <link rel="stylesheet" href="style.css" />
+    <style>
+        * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+
+body {
+    background-color: #f5f5f5;
+    padding: 20px;
+    height: 100vh;
+}
+
+/* Container met 3 kolommen */
+.container {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    align-items: stretch;
+    justify-content: center;
+}
+
+/* Verticale lijnen tussen de blokken */
+.v-separator {
+    width: 2px;
+    background-color: #999;
+}
+
+/* Algemene stijl voor elk vak */
+.vak {
+    flex: 1;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Auto-afbeelding in het midden van het linkervak */
+#autoVak {
+    background-color: #ffe5e5;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Aantal banden bovenaan gecentreerd */
+#bandenVak {
+    background-color: #e5f0ff;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#banden {
+    font-size: 2em;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+#bps {
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #333;
+}
+
+#clickValueDisplay {
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #444;
+}
+
+#upgrades {
+    background-color: #e5ffe5;
+    justify-content: flex-start;
+    align-items: flex-start;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 10px;
+}
+
+.upgrades-bps,
+.upgrades-click {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.upgrades-click {
+    align-items: flex-end;
+}
+
+.upgrades-click button,
+.upgrades-bps button {
+    width: 220px;
+    padding: 10px;
+    font-size: 1em;
+}
+
+/* Auto-afbeelding zelf */
+.auto {
+    width: 300px;
+    height: auto;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+/* Hover effect (optioneel) */
+.auto:hover {
+    width: 280px;
+    height: auto;
+    cursor: pointer;
+}
+
+/* Klik-animatie */
+@keyframes klikAnimatie {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.9); }
+    100% { transform: scale(1); }
+}
+
+.auto.klik-effect {
+    animation: klikAnimatie 0.2s ease;
+}
+
+/* Reset knop styling */
+#resetGame {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+#resetGame:hover {
+    background-color: #d32f2f;
+}
+
+button{
+    border-radius: 15px;
+}
+button {
+    transition: 0.2s ease;
+}
+
+button.disabled-upgrade {
+    background-color: #999 !important;
+    opacity: 0.6;
+    cursor: not-allowed !important;
+}
+
+button.enabled-upgrade {
+    background-color: #4CAF50;
+    opacity: 1;
+    cursor: pointer;
+}
+
+button.enabled-upgrade:hover {
+    transform: scale(1.05);
+}
+    </style>
 </head>
 <body>
 <div class="container">

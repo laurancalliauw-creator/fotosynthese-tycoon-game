@@ -1,1 +1,47 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Auto clicker</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+</head>
+<body>
+<div class="container">
+    <div class="vak" id="autoVak">
+        <img src="img/auto.webp" class="auto" id="auto" />
+    </div>
+
+    <div class="v-separator"></div>
+
+    <div class="vak" id="bandenVak">
+        <div id="banden">0 banden</div>
+        <div id="bps">Totale productie: 0 banden/s</div>
+        <div id="clickValueDisplay">Banden per klik: 1</div>
+        <button id="resetGame" style="margin-top: 10px; padding: 8px 12px; font-size: 1em; cursor: pointer;">
+            🔁 Reset spel
+        </button>
+    </div>
+
+    <div class="v-separator"></div>
+
+    <div id="upgrades">
+        <div class="upgrades-bps">
+            <button id="koopGarage">Koop Garage (+1 banden/s) (50 banden) - Je hebt 0</button>
+            <button id="koopFabriek">Koop Fabriek (+5 banden/s) (1000 banden) - Je hebt 0</button>
+            <button id="koopMega">Koop Megabouwer (+20 banden/s) (5000 banden) - Je hebt 0</button>
+            <button id="koopMegaPlus">Koop Mega+ (+50 banden/s) (10000 banden) - Je hebt 0</button>
+            <button id="koopUltra">Koop Ultra (+100 banden/s) (50000 banden) - Je hebt 0</button>
+            <button id="koopmiljonair">Koop miljonair (+500 banden/s) (100000 banden) - Je hebt 0</button>
+        </div>
+        <div class="upgrades-click">
+            <button id="koopSponsor">Koop Sponsor (+1 per klik) (500 banden) - Je hebt 0</button>
+            <button id="koopManager">Koop Manager (+5 per klik) (5000 banden) - Je hebt 0</button>
+            <button id="koopMarketeer">Koop Marketeer (+10 per klik) (50000 banden) - Je hebt 0</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+

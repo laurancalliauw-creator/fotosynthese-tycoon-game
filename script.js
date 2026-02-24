@@ -1,11 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
 
     const auto = document.getElementById("auto");
-    const energieDiv = document.getElementById("banden"); // mag zo blijven heten in HTML
+    const energieDiv = document.getElementById("banden");
     const bpsDiv = document.getElementById("bps");
     const clickValueDisplay = document.getElementById("clickValueDisplay");
     const resetButton = document.getElementById("resetGame");
-    const cheat = document.getElementById("cheat");
 
     const btnZonlicht = document.getElementById("Zonlicht");
     const btnCO2 = document.getElementById("koopFabriek");
@@ -72,7 +71,19 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateUpgradeButtons() {
         for (const key in upgrades) {
             const up = upgrades[key];
-            up.button.disabled = energie < up.price;
+            const genoeg = energie >= up.price;
+
+            up.button.disabled = !genoeg;
+
+            if (genoeg) {
+                up.button.style.opacity = "1";
+                up.button.style.cursor = "pointer";
+                up.button.style.filter = "none";
+            } else {
+                up.button.style.opacity = "0.5";
+                up.button.style.cursor = "not-allowed";
+                up.button.style.filter = "grayscale(100%)";
+            }
 
             let desc = "";
             if (up.type === "bps") {
@@ -80,33 +91,10 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 desc = `Koop ${capitalize(key)} (+${up.power} per klik) (${up.price} energie) - Je hebt ${up.count}`;
             }
+
             up.button.textContent = desc;
         }
-    }function updateUpgradeButtons() {
-    for (const key in upgrades) {
-        const up = upgrades[key];
-        const genoegGeld = energie >= up.price;
-
-        up.button.disabled = !genoegGeld;
-
-        if (genoegGeld) {
-            up.button.classList.remove("disabled-upgrade");
-            up.button.classList.add("enabled-upgrade");
-        } else {
-            up.button.classList.remove("enabled-upgrade");
-            up.button.classList.add("disabled-upgrade");
-        }
-
-        let desc = "";
-        if (up.type === "bps") {
-            desc = `Koop ${capitalize(key)} (+${up.power} energie/s) (${up.price} energie) - Je hebt ${up.count}`;
-        } else {
-            desc = `Koop ${capitalize(key)} (+${up.power} per klik) (${up.price} energie) - Je hebt ${up.count}`;
-        }
-
-        up.button.textContent = desc;
     }
-}
 
     function updateBpsDisplay(bps) {
         bpsDiv.textContent = `Totale fotosynthese: ${bps} energie/s`;
@@ -122,6 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
             energie -= up.price;
             up.count++;
             up.price = Math.floor(up.price * 1.2);
+
             updateEnergieDisplay();
             updateUpgradeButtons();
             updateBpsDisplay(calculateBps());
@@ -131,11 +120,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     auto.addEventListener("click", function () {
-        auto.classList.add("klik-effect");
-        setTimeout(() => {
-            auto.classList.remove("klik-effect");
-        }, 200);
-
         const clickValue = calculateClickValue();
         energie += clickValue;
 
@@ -211,9 +195,21 @@ document.addEventListener("DOMContentLoaded", function () {
             location.reload();
         }
     });
-    cheat.addEventListener("click", () => {
-        if (prompt("Wat is de cheatcode?") == "Foto-sync") {
-            energie += 1000000;
+
+    document.addEventListener("keydown", (e) => {
+        if (e.key.toLowerCase() === "f") {
+            const password = prompt("Voer het wachtwoord in:");
+            if (password === "Chick is de beste!") {
+                energie += 100000;
+                updateEnergieDisplay();
+                updateUpgradeButtons();
+                updateBpsDisplay(calculateBps());
+                updateClickValueDisplay(calculateClickValue());
+                saveGame();
+                alert("Succes! Je hebt 100000 energie gekregen.");
+            } else {
+                alert("Fout wachtwoord!");
+            }
         }
     });
 

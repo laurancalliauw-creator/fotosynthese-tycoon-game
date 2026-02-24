@@ -1,191 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <title>Fotosynthesis Clicker</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: sans-serif;
-        }
+<meta charset="UTF-8" />
+<title>Fotosynthesis Clicker</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+body { background-color: #f5f5f5; padding: 20px; height: 100vh; }
 
-        body {
-            background-color: #f5f5f5;
-            padding: 20px;
-            height: 100vh;
-        }
+.container { display: flex; flex-direction: row; height: 100%; align-items: stretch; justify-content: center; }
+.v-separator { width: 2px; background-color: #999; }
+.vak { flex: 1; padding: 20px; border-radius: 10px; display: flex; flex-direction: column; }
 
-        /* Container met 3 kolommen */
-        .container {
-            display: flex;
-            flex-direction: row;
-            height: 100%;
-            align-items: stretch;
-            justify-content: center;
-        }
+#autoVak { background-color: #ffe5e5; justify-content: center; align-items: center; }
+#bandenVak { background-color: #e5f0ff; justify-content: flex-start; align-items: center; }
+#banden { font-size: 2em; font-weight: bold; margin-top: 10px; }
+#bps, #clickValueDisplay { margin-top: 10px; font-weight: bold; font-size: 1.2em; color: #333; }
 
-        /* Verticale lijnen tussen de blokken */
-        .v-separator {
-            width: 2px;
-            background-color: #999;
-        }
+#upgrades { background-color: #e5ffe5; justify-content: flex-start; align-items: flex-start; display: flex; justify-content: space-between; gap: 20px; padding: 10px; }
+.upgrades-bps, .upgrades-click { display: flex; flex-direction: column; gap: 10px; }
+.upgrades-click { align-items: flex-end; }
+.upgrades-click button, .upgrades-bps button { width: 220px; padding: 10px; font-size: 1em; }
 
-        /* Algemene stijl voor elk vak */
-        .vak {
-            flex: 1;
-            padding: 20px;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-        }
+.auto { width: 300px; height: auto; cursor: pointer; transition: transform 0.1s ease; }
+.auto:hover { width: 280px; height: auto; cursor: pointer; }
+@keyframes klikAnimatie { 0% { transform: scale(1); } 50% { transform: scale(0.9); } 100% { transform: scale(1); } }
+.auto.klik-effect { animation: klikAnimatie 0.2s ease; }
 
-        /* Auto-afbeelding in het midden van het linkervak */
-        #autoVak {
-            background-color: #ffe5e5;
-            justify-content: center;
-            align-items: center;
-        }
+#resetGame { background-color: #f44336; color: white; border: none; border-radius: 5px; transition: background-color 0.3s ease; }
+#resetGame:hover { background-color: #d32f2f; }
 
-        /* Aantal banden bovenaan gecentreerd */
-        #bandenVak {
-            background-color: #e5f0ff;
-            justify-content: flex-start;
-            align-items: center;
-        }
-
-        #banden {
-            font-size: 2em;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-
-        #bps {
-            margin-top: 10px;
-            font-weight: bold;
-            font-size: 1.2em;
-            color: #333;
-        }
-
-        #clickValueDisplay {
-            margin-top: 10px;
-            font-weight: bold;
-            font-size: 1.2em;
-            color: #444;
-        }
-
-        #upgrades {
-            background-color: #e5ffe5;
-            justify-content: flex-start;
-            align-items: flex-start;
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
-            padding: 10px;
-        }
-
-        .upgrades-bps,
-        .upgrades-click {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .upgrades-click {
-            align-items: flex-end;
-        }
-
-        .upgrades-click button,
-        .upgrades-bps button {
-            width: 220px;
-            padding: 10px;
-            font-size: 1em;
-        }
-
-        /* Auto-afbeelding zelf */
-        .auto {
-            width: 300px;
-            height: auto;
-            cursor: pointer;
-            transition: transform 0.1s ease;
-        }
-
-        /* Hover effect (optioneel) */
-        .auto:hover {
-            width: 280px;
-            height: auto;
-            cursor: pointer;
-        }
-
-        /* Klik-animatie */
-        @keyframes klikAnimatie {
-            0% { transform: scale(1); }
-            50% { transform: scale(0.9); }
-            100% { transform: scale(1); }
-        }
-
-        .auto.klik-effect {
-            animation: klikAnimatie 0.2s ease;
-        }
-
-        /* Reset knop styling */
-        #resetGame {
-            background-color: #f44336;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-
-        #resetGame:hover {
-            background-color: #d32f2f;
-        }
-
-        button {
-            border-radius: 15px;
-            transition: 0.2s ease;
-        }
-
-        button.disabled-upgrade {
-            background-color: #999 !important;
-            opacity: 0.6;
-            cursor: not-allowed !important;
-        }
-
-        button.enabled-upgrade {
-            background-color: #4CAF50;
-            opacity: 1;
-            cursor: pointer;
-        }
-
-        button.enabled-upgrade:hover {
-            transform: scale(1.05);
-        }
-    </style>
+button { border-radius: 15px; transition: 0.2s ease; }
+button.disabled-upgrade { background-color: #999 !important; opacity: 0.6; cursor: not-allowed !important; }
+button.enabled-upgrade { background-color: #4CAF50; opacity: 1; cursor: pointer; }
+button.enabled-upgrade:hover { transform: scale(1.05); }
+</style>
 </head>
 <body>
 <div class="container">
     <div class="vak" id="autoVak">
-        <img src="plant.png" class="auto" id="auto" />
+        <img src="plant1.png" class="auto" id="auto" />
     </div>
-
     <div class="v-separator"></div>
-
     <div class="vak" id="bandenVak">
         <div id="banden">0 energie</div>
         <div id="bps">Totale productie: 0 energie/s</div>
         <div id="clickValueDisplay">Energie per klik: 1</div>
-        <button id="resetGame" style="margin-top: 10px; padding: 8px 12px; font-size: 1em; cursor: pointer;">
-            🔁 Reset spel
-        </button>
-        <button id="cheat" style="margin-top: 10px; padding: 8px 12px; font-size: 1em; cursor: pointer;">
-            🔑 Cheat invoeren
-        </button>
+        <button id="resetGame" style="margin-top: 10px; padding: 8px 12px; font-size: 1em; cursor: pointer;">🔁 Reset spel</button>
+        <button id="cheat" style="margin-top: 10px; padding: 8px 12px; font-size: 1em; cursor: pointer;">🔑 Cheat invoeren</button>
     </div>
-
     <div class="v-separator"></div>
-
     <div id="upgrades">
         <div class="upgrades-bps">
             <button id="koopGarage">Koop Zonlicht (+1 energie/s) (50 energie) - Je hebt 0</button>
@@ -205,7 +68,6 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-
     const auto = document.getElementById("auto");
     const energieDiv = document.getElementById("banden");
     const bpsDiv = document.getElementById("bps");
@@ -224,208 +86,156 @@ document.addEventListener("DOMContentLoaded", function () {
     const btnGenetica = document.getElementById("koopMarketeer");
 
     let energie = 0;
+    let totaleEnergie = 0;
     const baseClickValue = 1;
 
-    const defaultPrices = {
-        zonlicht: 50,
-        co2: 1000,
-        water: 5000,
-        bladgroen: 10000,
-        groteBoom: 50000,
-        regenwoud: 100000,
-        meststof: 500,
-        bijen: 5000,
-        genetica: 50000
+    const defaultPrices = { zonlicht:50, co2:1000, water:5000, bladgroen:10000, groteBoom:50000, regenwoud:100000, meststof:500, bijen:5000, genetica:50000 };
+    const upgrades = {
+        zonlicht:{count:0, price:50, power:1, button:btnZonlicht, type:"bps"},
+        co2:{count:0, price:1000, power:5, button:btnCO2, type:"bps"},
+        water:{count:0, price:5000, power:20, button:btnWater, type:"bps"},
+        bladgroen:{count:0, price:10000, power:50, button:btnBladgroen, type:"bps"},
+        groteBoom:{count:0, price:50000, power:100, button:btnBoom, type:"bps"},
+        regenwoud:{count:0, price:100000, power:500, button:btnRegenwoud, type:"bps"},
+        meststof:{count:0, price:500, power:1, button:btnMeststof, type:"click"},
+        bijen:{count:0, price:5000, power:5, button:btnBijen, type:"click"},
+        genetica:{count:0, price:50000, power:10, button:btnGenetica, type:"click"}
     };
 
-    const upgrades = {
-        zonlicht: { count: 0, price: defaultPrices.zonlicht, power: 1, button: btnZonlicht, type: "bps" },
-        co2: { count: 0, price: defaultPrices.co2, power: 5, button: btnCO2, type: "bps" },
-        water: { count: 0, price: defaultPrices.water, power: 20, button: btnWater, type: "bps" },
-        bladgroen: { count: 0, price: defaultPrices.bladgroen, power: 50, button: btnBladgroen, type: "bps" },
-        groteBoom: { count: 0, price: defaultPrices.groteBoom, power: 100, button: btnBoom, type: "bps" },
-        regenwoud: { count: 0, price: defaultPrices.regenwoud, power: 500, button: btnRegenwoud, type: "bps" },
-        meststof: { count: 0, price: defaultPrices.meststof, power: 1, button: btnMeststof, type: "click" },
-        bijen: { count: 0, price: defaultPrices.bijen, power: 5, button: btnBijen, type: "click" },
-        genetica: { count: 0, price: defaultPrices.genetica, power: 10, button: btnGenetica, type: "click" }
-    };
+    function getPlantMultiplier() {
+        if(totaleEnergie<500) return 1;
+        else if(totaleEnergie<3000) return 1.1;
+        else if(totaleEnergie<10000) return 1.2;
+        else return 1.5;
+    }
 
     function calculateBps() {
-        let total = 0;
-        for (const key in upgrades) {
-            if (upgrades[key].type === "bps") {
-                total += upgrades[key].count * upgrades[key].power;
-            }
-        }
-        return total;
+        let total=0;
+        for(const key in upgrades) if(upgrades[key].type==="bps") total += upgrades[key].count*upgrades[key].power;
+        return total*getPlantMultiplier();
     }
 
     function calculateClickValue() {
-        let extraClicks = 0;
-        for (const key in upgrades) {
-            if (upgrades[key].type === "click") {
-                extraClicks += upgrades[key].count * upgrades[key].power;
-            }
-        }
-        return baseClickValue + extraClicks;
+        let extra=0;
+        for(const key in upgrades) if(upgrades[key].type==="click") extra += upgrades[key].count*upgrades[key].power;
+        return (baseClickValue+extra)*getPlantMultiplier();
     }
 
     function updateEnergieDisplay() {
         energieDiv.textContent = `${energie} energie`;
+        if(totaleEnergie<500) auto.src="plant1.png";
+        else if(totaleEnergie<3000) auto.src="plant2.png";
+        else if(totaleEnergie<10000) auto.src="plant3.png";
+        else auto.src="plant4.png";
     }
 
     function updateUpgradeButtons() {
-        for (const key in upgrades) {
-            const up = upgrades[key];
-            const genoeg = energie >= up.price;
-
-            up.button.disabled = !genoeg;
-
-            if (genoeg) {
-                up.button.style.opacity = "1";
-                up.button.style.cursor = "pointer";
-                up.button.style.filter = "none";
-            } else {
-                up.button.style.opacity = "0.5";
-                up.button.style.cursor = "not-allowed";
-                up.button.style.filter = "grayscale(100%)";
-            }
-
-            let desc = "";
-            if (up.type === "bps") {
-                desc = `Koop ${capitalize(key)} (+${up.power} energie/s) (${up.price} energie) - Je hebt ${up.count}`;
-            } else {
-                desc = `Koop ${capitalize(key)} (+${up.power} per klik) (${up.price} energie) - Je hebt ${up.count}`;
-            }
-
-            up.button.textContent = desc;
+        for(const key in upgrades){
+            const up=upgrades[key];
+            const genoeg = energie>=up.price;
+            up.button.disabled=!genoeg;
+            up.button.classList.toggle("enabled-upgrade", genoeg);
+            up.button.classList.toggle("disabled-upgrade", !genoeg);
+            up.button.textContent=up.type==="bps"? 
+                `Koop ${capitalize(key)} (+${up.power} energie/s) (${up.price} energie) - Je hebt ${up.count}`:
+                `Koop ${capitalize(key)} (+${up.power} per klik) (${up.price} energie) - Je hebt ${up.count}`;
         }
     }
 
-    function updateBpsDisplay(bps) {
-        bpsDiv.textContent = `Totale productie: ${bps} energie/s`;
-    }
+    function updateBpsDisplay(bps){bpsDiv.textContent=`Totale productie: ${bps} energie/s`;}
+    function updateClickValueDisplay(clickValue){clickValueDisplay.textContent=`Energie per klik: ${clickValue}`;}
 
-    function updateClickValueDisplay(clickValue) {
-        clickValueDisplay.textContent = `Energie per klik: ${clickValue}`;
-    }
-
-    function koopUpgrade(type) {
-        const up = upgrades[type];
-        if (energie >= up.price) {
-            energie -= up.price;
+    function koopUpgrade(type){
+        const up=upgrades[type];
+        if(energie>=up.price){
+            energie-=up.price;
             up.count++;
-            up.price = Math.floor(up.price * 1.2);
-
-            updateEnergieDisplay();
-            updateUpgradeButtons();
-            updateBpsDisplay(calculateBps());
-            updateClickValueDisplay(calculateClickValue());
+            up.price=Math.floor(up.price*1.2);
+            updateAll();
             saveGame();
         }
     }
 
-    auto.addEventListener("click", function () {
-        const clickValue = calculateClickValue();
-        energie += clickValue;
-
+    function updateAll(){
         updateEnergieDisplay();
         updateUpgradeButtons();
         updateBpsDisplay(calculateBps());
-        updateClickValueDisplay(clickValue);
+        updateClickValueDisplay(calculateClickValue());
+    }
+
+    auto.addEventListener("click", function(){
+        const val=calculateClickValue();
+        energie+=val;
+        totaleEnergie+=val;
+        updateAll();
         saveGame();
     });
 
-    btnZonlicht.addEventListener("click", () => koopUpgrade("zonlicht"));
-    btnCO2.addEventListener("click", () => koopUpgrade("co2"));
-    btnWater.addEventListener("click", () => koopUpgrade("water"));
-    btnBladgroen.addEventListener("click", () => koopUpgrade("bladgroen"));
-    btnBoom.addEventListener("click", () => koopUpgrade("groteBoom"));
-    btnRegenwoud.addEventListener("click", () => koopUpgrade("regenwoud"));
-    btnMeststof.addEventListener("click", () => koopUpgrade("meststof"));
-    btnBijen.addEventListener("click", () => koopUpgrade("bijen"));
-    btnGenetica.addEventListener("click", () => koopUpgrade("genetica"));
+    btnZonlicht.addEventListener("click", ()=>koopUpgrade("zonlicht"));
+    btnCO2.addEventListener("click", ()=>koopUpgrade("co2"));
+    btnWater.addEventListener("click", ()=>koopUpgrade("water"));
+    btnBladgroen.addEventListener("click", ()=>koopUpgrade("bladgroen"));
+    btnBoom.addEventListener("click", ()=>koopUpgrade("groteBoom"));
+    btnRegenwoud.addEventListener("click", ()=>koopUpgrade("regenwoud"));
+    btnMeststof.addEventListener("click", ()=>koopUpgrade("meststof"));
+    btnBijen.addEventListener("click", ()=>koopUpgrade("bijen"));
+    btnGenetica.addEventListener("click", ()=>koopUpgrade("genetica"));
 
-    setInterval(() => {
-        const bps = calculateBps();
-        if (bps > 0) {
-            energie += bps;
-            updateEnergieDisplay();
-            updateUpgradeButtons();
-            updateBpsDisplay(bps);
-            updateClickValueDisplay(calculateClickValue());
+    setInterval(()=>{
+        const bps=calculateBps();
+        if(bps>0){
+            energie+=bps;
+            totaleEnergie+=bps;
+            updateAll();
             saveGame();
         }
-    }, 1000);
+    },1000);
 
-    function saveGame() {
-        const saveData = {
-            energie,
-            upgrades: {}
-        };
-        for (const key in upgrades) {
-            saveData.upgrades[key] = {
-                count: upgrades[key].count,
-                price: upgrades[key].price
-            };
-        }
+    function saveGame(){
+        const saveData={energie, totaleEnergie, upgrades:{}};
+        for(const key in upgrades) saveData.upgrades[key]={count:upgrades[key].count, price:upgrades[key].price};
         localStorage.setItem("autosave", JSON.stringify(saveData));
     }
 
-    function loadGame() {
-        const saveData = localStorage.getItem("autosave");
-        if (saveData) {
-            try {
-                const data = JSON.parse(saveData);
-                energie = data.energie || 0;
-                for (const key in upgrades) {
-                    if (data.upgrades[key]) {
-                        upgrades[key].count = data.upgrades[key].count || 0;
-                        upgrades[key].price = data.upgrades[key].price || defaultPrices[key];
+    function loadGame(){
+        const saveData=localStorage.getItem("autosave");
+        if(saveData){
+            try{
+                const data=JSON.parse(saveData);
+                energie=data.energie||0;
+                totaleEnergie=data.totaleEnergie||0;
+                for(const key in upgrades){
+                    if(data.upgrades[key]){
+                        upgrades[key].count=data.upgrades[key].count||0;
+                        upgrades[key].price=data.upgrades[key].price||defaultPrices[key];
                     }
                 }
-            } catch {
-                console.warn("Ongeldige save data");
-            }
+            }catch{console.warn("Ongeldige save data");}
         }
     }
 
-    resetButton.addEventListener("click", () => {
-        if (confirm("Weet je zeker dat je het spel wilt resetten? Alles gaat verloren.")) {
+    resetButton.addEventListener("click", ()=>{
+        if(confirm("Weet je zeker dat je het spel wilt resetten? Alles gaat verloren.")){
             localStorage.removeItem("autosave");
-            energie = 0;
-            for (const key in upgrades) {
-                upgrades[key].count = 0;
-                upgrades[key].price = defaultPrices[key];
-            }
+            energie=0; totaleEnergie=0;
+            for(const key in upgrades){upgrades[key].count=0; upgrades[key].price=defaultPrices[key];}
             location.reload();
         }
     });
 
-    document.getElementById("cheat").addEventListener("click", () => {
-        const password = prompt("Voer het wachtwoord in:");
-        if (password === "Fotosynthese laat bladeren zonlicht omzetten in leven en lucht.") {
-            energie += 100000;
-            updateEnergieDisplay();
-            updateUpgradeButtons();
-            updateBpsDisplay(calculateBps());
-            updateClickValueDisplay(calculateClickValue());
+    document.getElementById("cheat").addEventListener("click", ()=>{
+        const password=prompt("Voer het wachtwoord in:");
+        if(password==="Fotosynthese laat bladeren zonlicht omzetten in leven en lucht."){
+            energie+=100000;
+            totaleEnergie+=100000;
+            updateAll();
             saveGame();
             alert("Succes! Je hebt 100000 energie gekregen.");
-        } else {
-            alert("Fout wachtwoord!");
-        }
+        }else alert("Fout wachtwoord!");
     });
 
-    function capitalize(str) {
-        return str.charAt(0).toUpperCase() + str.slice(1);
-    }
-
-    loadGame();
-    updateEnergieDisplay();
-    updateUpgradeButtons();
-    updateBpsDisplay(calculateBps());
-    updateClickValueDisplay(calculateClickValue());
+    function capitalize(str){return str.charAt(0).toUpperCase()+str.slice(1);}
+    loadGame(); updateAll();
 });
 </script>
 </body>

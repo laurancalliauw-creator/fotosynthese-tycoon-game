@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const bpsDiv = document.getElementById("bps");
     const clickValueDisplay = document.getElementById("clickValueDisplay");
     const resetButton = document.getElementById("resetGame");
+    const cheat = document.getElementById("cheat");
 
     const btnZonlicht = document.getElementById("Zonlicht");
     const btnCO2 = document.getElementById("koopFabriek");
@@ -208,6 +209,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 upgrades[key].price = defaultPrices[key];
             }
             location.reload();
+        }
+    });
+    cheat.addEventListener("click", () => {
+        if (prompt("Wat is de cheatcode?") == "Foto-sync") {
+            energie += 1000000;
         }
     });
 

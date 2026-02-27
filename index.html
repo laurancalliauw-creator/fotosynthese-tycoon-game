@@ -35,6 +35,40 @@ button { border-radius: 15px; transition: 0.2s ease; }
 button.disabled-upgrade { background-color: #999 !important; opacity: 0.6; cursor: not-allowed !important; }
 button.enabled-upgrade { background-color: #4CAF50; opacity: 1; cursor: pointer; }
 button.enabled-upgrade:hover { transform: scale(1.05); }
+
+.ad-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 5000;
+}
+
+.ad-overlay.show { display: flex; }
+
+.ad-box {
+    width: min(90vw, 720px);
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 14px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+}
+
+.ad-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.ad-video {
+    width: 100%;
+    max-height: 70vh;
+    border-radius: 8px;
+    background: #000;
+}
 </style>
 </head>
 <body>
@@ -72,6 +106,19 @@ button.enabled-upgrade:hover { transform: scale(1.05); }
     </div>
 </div>
 
+<div id="adOverlay" class="ad-overlay" aria-hidden="true">
+    <div class="ad-box">
+        <div class="ad-header">
+            <strong>Reclame</strong>
+            <button id="closeAd" style="padding: 6px 10px; cursor: pointer;" disabled>Sluiten</button>
+        </div>
+        <video id="adVideo" class="ad-video" controls autoplay muted>
+            <source src="reclame.mp4" type="video/mp4" />
+            Je browser ondersteunt geen video.
+        </video>
+    </div>
+</div>
+
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -81,6 +128,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const bpsDiv = document.getElementById("bps");
     const clickValueDisplay = document.getElementById("clickValueDisplay");
     const resetButton = document.getElementById("resetGame");
+    const adOverlay = document.getElementById("adOverlay");
+    const closeAdButton = document.getElementById("closeAd");
+    const adVideo = document.getElementById("adVideo");
+    let adCloseTimeout = null;
+    let canCloseAd = false;
 
     const btnZonlicht = document.getElementById("koopGarage");
     const btnCO2 = document.getElementById("koopFabriek");
@@ -245,6 +297,50 @@ document.addEventListener("DOMContentLoaded", function () {
     btnMeststof.addEventListener("click", () => koopUpgrade("meststof"));
     btnBijen.addEventListener("click", () => koopUpgrade("bijen"));
     btnGenetica.addEventListener("click", () => koopUpgrade("genetica"));
+
+    function openAdVideo() {
+        if (adCloseTimeout) {
+            clearTimeout(adCloseTimeout);
+            adCloseTimeout = null;
+        }
+        canCloseAd = false;
+        closeAdButton.disabled = true;
+        adOverlay.classList.add("show");
+        adOverlay.setAttribute("aria-hidden", "false");
+        adVideo.currentTime = 0;
+        adVideo.play().catch(() => {});
+    }
+
+    function closeAdVideo() {
+        if (!canCloseAd) {
+            return;
+        }
+        if (adCloseTimeout) {
+            clearTimeout(adCloseTimeout);
+            adCloseTimeout = null;
+        }
+        adOverlay.classList.remove("show");
+        adOverlay.setAttribute("aria-hidden", "true");
+        adVideo.pause();
+    }
+
+    adVideo.addEventListener("ended", () => {
+        adVideo.currentTime = 0;
+        adVideo.play().catch(() => {});
+        adCloseTimeout = setTimeout(() => {
+            canCloseAd = true;
+            closeAdButton.disabled = false;
+        }, 5000);
+    });
+
+    closeAdButton.addEventListener("click", closeAdVideo);
+    adOverlay.addEventListener("click", (event) => {
+        if (event.target === adOverlay) {
+            closeAdVideo();
+        }
+    });
+
+    setInterval(openAdVideo, 120000);
 
     setInterval(() => {
         const bps = calculateBps();

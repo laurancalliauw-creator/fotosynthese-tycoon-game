@@ -199,7 +199,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.addEventListener("keydown", (e) => {
         if (e.key.toLowerCase() === "f") {
             const password = prompt("Voer het wachtwoord in:");
-            if (password === "Chick is de beste!") {
+            if (password === "fotosynthese") {
                 energie += 100000;
                 updateEnergieDisplay();
                 updateUpgradeButtons();

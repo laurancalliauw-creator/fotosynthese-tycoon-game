@@ -120,6 +120,10 @@ button.enabled-upgrade:hover { transform: scale(1.05); }
     </div>
 </div>
 
+<audio id="backgroundMusic" loop preload="auto">
+    <source src="54e14f79-4365-4a9d-a950-28f15b67acd6.mp3" type="audio/mpeg" />
+</audio>
+
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -132,6 +136,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const adOverlay = document.getElementById("adOverlay");
     const closeAdButton = document.getElementById("closeAd");
     const adVideo = document.getElementById("adVideo");
+    const backgroundMusic = document.getElementById("backgroundMusic");
     let adCloseTimeout = null;
     let canCloseAd = false;
 
@@ -173,6 +178,16 @@ document.addEventListener("DOMContentLoaded", function () {
         bijen: { count: 0, price: defaultPrices.bijen, power: 5, button: btnBijen, type: "click" },
         genetica: { count: 0, price: defaultPrices.genetica, power: 10, button: btnGenetica, type: "click" }
     };
+
+    function startBackgroundMusic() {
+        backgroundMusic.volume = 0.35;
+        backgroundMusic.play().catch(() => {});
+    }
+
+    startBackgroundMusic();
+    document.addEventListener("click", startBackgroundMusic, { once: true });
+    document.addEventListener("keydown", startBackgroundMusic, { once: true });
+    document.addEventListener("touchstart", startBackgroundMusic, { once: true });
 
     function calculateBps() {
         let total = 0;
@@ -259,6 +274,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     auto.addEventListener("click", function () {
+        triggerSunFlash();
         const clickValue = calculateClickValue();
         energie += clickValue;
         totaleEnergie += clickValue;
@@ -277,7 +293,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
     sunLightProbe.src = "zon-licht.png";
 
-    sun.addEventListener("click", () => {
+    function triggerSunFlash() {
         if (hasSunLightImage) {
             sun.src = "zon-licht.png";
         }
@@ -287,7 +303,7 @@ document.addEventListener("DOMContentLoaded", function () {
             sun.classList.remove("flash");
             sun.src = "zon.png";
         }, 200);
-    });
+    }
 
     btnZonlicht.addEventListener("click", () => koopUpgrade("zonlicht"));
     btnCO2.addEventListener("click", () => koopUpgrade("co2"));

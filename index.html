@@ -6,7 +6,8 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
 body { background-color: #f5f5f5; padding: 20px; height: 100vh; }
-.sun { position: fixed; top: 12px; left: 12px; width: 110px; height: auto; cursor: pointer; z-index: 1000; }
+.sun { position: fixed; top: 12px; left: 12px; width: 110px; height: auto; cursor: pointer; z-index: 1000; transition: transform 0.15s ease, filter 0.15s ease; }
+.sun.flash { transform: scale(1.06); filter: brightness(1.5) drop-shadow(0 0 16px #ffd54f); }
 
 .container { display: flex; flex-direction: row; height: 100%; align-items: stretch; justify-content: center; }
 .v-separator { width: 2px; background-color: #999; }
@@ -216,10 +217,21 @@ document.addEventListener("DOMContentLoaded", function () {
         saveGame();
     });
 
+    let hasSunLightImage = false;
+    const sunLightProbe = new Image();
+    sunLightProbe.onload = () => {
+        hasSunLightImage = true;
+    };
+    sunLightProbe.src = "zon-licht.png";
+
     sun.addEventListener("click", () => {
-        sun.src = "zon-licht.png";
+        if (hasSunLightImage) {
+            sun.src = "zon-licht.png";
+        }
+        sun.classList.add("flash");
         clearTimeout(sun.lightTimeout);
         sun.lightTimeout = setTimeout(() => {
+            sun.classList.remove("flash");
             sun.src = "zon.png";
         }, 200);
     });

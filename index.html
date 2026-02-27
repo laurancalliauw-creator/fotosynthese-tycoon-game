@@ -13,7 +13,7 @@ body { background-color: #f5f5f5; padding: 20px; height: 100vh; }
 .v-separator { width: 2px; background-color: #999; }
 .vak { flex: 1; padding: 20px; border-radius: 10px; display: flex; flex-direction: column; }
 
-#autoVak { background-color: #ffe5e5; justify-content: center; align-items: center; }
+#autoVak { background-color: #ffe5e5; justify-content: center; align-items: center; position: relative; overflow: hidden; }
 #bandenVak { background-color: #e5f0ff; justify-content: flex-start; align-items: center; }
 #banden { font-size: 2em; font-weight: bold; margin-top: 10px; }
 #bps, #clickValueDisplay { margin-top: 10px; font-weight: bold; font-size: 1.2em; color: #333; }
@@ -27,6 +27,22 @@ body { background-color: #f5f5f5; padding: 20px; height: 100vh; }
 .auto:hover { width: 280px; height: auto; cursor: pointer; }
 @keyframes klikAnimatie { 0% { transform: scale(1); } 50% { transform: scale(0.9); } 100% { transform: scale(1); } }
 .auto.klik-effect { animation: klikAnimatie 0.2s ease; }
+
+.oxygen-particle {
+    position: absolute;
+    width: 52px;
+    height: 52px;
+    pointer-events: none;
+    user-select: none;
+    animation: oxygenFloatUp 1.4s ease-out forwards;
+    z-index: 50;
+}
+
+@keyframes oxygenFloatUp {
+    0% { transform: translate(0, 0) scale(0.8); opacity: 0; }
+    15% { opacity: 1; }
+    100% { transform: translate(var(--drift-x, 0px), -140px) scale(1.15); opacity: 0; }
+}
 
 #resetGame { background-color: #f44336; color: white; border: none; border-radius: 5px; transition: background-color 0.3s ease; }
 #resetGame:hover { background-color: #d32f2f; }
@@ -128,6 +144,7 @@ button.enabled-upgrade:hover { transform: scale(1.05); }
 document.addEventListener("DOMContentLoaded", function () {
 
     const auto = document.getElementById("auto");
+    const autoVak = document.getElementById("autoVak");
     const sun = document.getElementById("sun");
     const energieDiv = document.getElementById("banden");
     const bpsDiv = document.getElementById("bps");
@@ -275,6 +292,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     auto.addEventListener("click", function () {
         triggerSunFlash();
+        spawnOxygenBurst(3);
         const clickValue = calculateClickValue();
         energie += clickValue;
         totaleEnergie += clickValue;
@@ -303,6 +321,31 @@ document.addEventListener("DOMContentLoaded", function () {
             sun.classList.remove("flash");
             sun.src = "zon.png";
         }, 200);
+    }
+
+    function spawnOxygenMolecule() {
+        const molecule = document.createElement("img");
+        molecule.src = "Kawaii zuurstofmoleculen met glimlach.png";
+        molecule.alt = "Zuurstof";
+        molecule.className = "oxygen-particle";
+
+        const baseLeft = auto.offsetLeft + (auto.offsetWidth / 2) - 26;
+        const baseTop = auto.offsetTop + (auto.offsetHeight * 0.2);
+        const randomX = Math.floor((Math.random() - 0.5) * 90);
+        const randomDrift = Math.floor((Math.random() - 0.5) * 80);
+
+        molecule.style.left = `${baseLeft + randomX}px`;
+        molecule.style.top = `${baseTop}px`;
+        molecule.style.setProperty("--drift-x", `${randomDrift}px`);
+
+        autoVak.appendChild(molecule);
+        setTimeout(() => molecule.remove(), 1500);
+    }
+
+    function spawnOxygenBurst(count) {
+        for (let i = 0; i < count; i++) {
+            setTimeout(spawnOxygenMolecule, i * 90);
+        }
     }
 
     btnZonlicht.addEventListener("click", () => koopUpgrade("zonlicht"));

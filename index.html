@@ -6,6 +6,7 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
 body { background-color: #f5f5f5; padding: 20px; height: 100vh; }
+.sun { position: fixed; top: 12px; left: 12px; width: 110px; height: auto; cursor: pointer; z-index: 1000; }
 
 .container { display: flex; flex-direction: row; height: 100%; align-items: stretch; justify-content: center; }
 .v-separator { width: 2px; background-color: #999; }
@@ -36,6 +37,7 @@ button.enabled-upgrade:hover { transform: scale(1.05); }
 </style>
 </head>
 <body>
+<img src="zon.png" id="sun" class="sun" alt="Zon" />
 <div class="container">
     <div class="vak" id="autoVak">
         <img src="plant1.png" class="auto" id="auto" />
@@ -73,6 +75,7 @@ button.enabled-upgrade:hover { transform: scale(1.05); }
 document.addEventListener("DOMContentLoaded", function () {
 
     const auto = document.getElementById("auto");
+    const sun = document.getElementById("sun");
     const energieDiv = document.getElementById("banden");
     const bpsDiv = document.getElementById("bps");
     const clickValueDisplay = document.getElementById("clickValueDisplay");
@@ -211,6 +214,14 @@ document.addEventListener("DOMContentLoaded", function () {
         updateBpsDisplay(calculateBps());
         updateClickValueDisplay(clickValue);
         saveGame();
+    });
+
+    sun.addEventListener("click", () => {
+        sun.src = "zon-licht.png";
+        clearTimeout(sun.lightTimeout);
+        sun.lightTimeout = setTimeout(() => {
+            sun.src = "zon.png";
+        }, 200);
     });
 
     btnZonlicht.addEventListener("click", () => koopUpgrade("zonlicht"));

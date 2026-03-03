@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fotosynthese Quiz</title>
+  <style>
+    :root {
+      --bg: #f3fbf4;
+      --card: #ffffff;
+      --text: #1c2b22;
+      --accent: #2f8f4e;
+      --muted: #5f7568;
+      --ok: #1f9d55;
+      --bad: #d64545;
+      --border: #d7e7da;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, #e6f7ea 0%, var(--bg) 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+    }
+
+    .quiz {
+      width: 100%;
+      max-width: 720px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 10px 24px rgba(19, 53, 31, 0.08);
+      overflow: hidden;
+    }
+
+    .topbar {
+      background: var(--accent);
+      color: #fff;
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+    }
+
+    .content {
+      padding: 24px 20px 20px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 1.5rem;
+    }
+
+    .subtitle {
+      margin: 0 0 20px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .question {
+      font-size: 1.2rem;
+      margin: 0 0 14px;
+      font-weight: 600;
+    }
+
+    .answers {
+      display: grid;
+      gap: 10px;
+    }
+
+    button {
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      padding: 12px;
+      border-radius: 10px;
+      text-align: left;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: 0.15s ease;
+    }
+
+    button:hover:not(:disabled) {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    button.correct {
+      background: #e9f9ee;
+      border-color: #a6e3bb;
+      color: var(--ok);
+      font-weight: 600;
+    }
+
+    button.wrong {
+      background: #ffeded;
+      border-color: #f0b5b5;
+      color: var(--bad);
+      font-weight: 600;
+    }
+
+    .feedback {
+      margin-top: 16px;
+      font-weight: 600;
+      min-height: 24px;
+    }
+  </style>
+</head>
+<body>
+  <main class="quiz">
+    <div class="topbar">
+      <span>Fotosynthese Quiz</span>
+      <span id="score">Score: 0</span>
+    </div>
+
+    <section class="content" id="quizContent">
+      <h1>Test je kennis</h1>
+      <p class="subtitle">Makkelijke vragen over fotosynthese. De quiz gaat automatisch verder.</p>
+      <p class="question" id="question"></p>
+      <div class="answers" id="answers"></div>
+      <p class="feedback" id="feedback"></p>
+    </section>
+  </main>
+
+  <script>
+    const questions = [
+      { question: "Wat hebben planten nodig voor fotosynthese?", answers: ["Zonlicht", "Plastic", "Stofzuigers", "Zand"], correct: 0 },
+      { question: "Welk gas nemen planten op uit de lucht?", answers: ["Zuurstof", "Koolstofdioxide", "Helium", "Waterstof"], correct: 1 },
+      { question: "Waar vindt fotosynthese vooral plaats?", answers: ["In de wortels", "In de bloemen", "In de bladeren", "In de schors"], correct: 2 },
+      { question: "Wat maken planten met fotosynthese als voedsel?", answers: ["Suiker (glucose)", "IJzer", "Zout", "Krijt"], correct: 0 },
+      { question: "Welk gas geven planten meestal af bij fotosynthese?", answers: ["Koolstofdioxide", "Zuurstof", "Stikstof", "Neon"], correct: 1 },
+      { question: "Welke kleur hebben gezonde bladeren meestal?", answers: ["Groen", "Paars", "Zwart", "Oranje"], correct: 0 },
+      { question: "Welk deel van de plant vangt vaak het meeste licht op?", answers: ["Blad", "Wortel", "Zaad", "Stengel binnenin"], correct: 0 },
+      { question: "Wat zit er in bladeren dat licht opvangt?", answers: ["Chlorofyl", "Metaal", "Zandkorrels", "Luchtbellen"], correct: 0 },
+      { question: "Waar halen planten water vandaan?", answers: ["Uit de bodem via wortels", "Uit stenen", "Uit plastic", "Uit lampen"], correct: 0 },
+      { question: "Fotosynthese gebeurt vooral overdag omdat er dan...", answers: ["licht is", "meer sterren zijn", "minder lucht is", "meer zand is"], correct: 0 },
+      { question: "Wat is GEEN ingrediënt voor fotosynthese?", answers: ["Speelgoed", "Water", "Licht", "Koolstofdioxide"], correct: 0 },
+      { question: "Wat gebeurt er met de score bij een goed antwoord?", answers: ["Die stijgt", "Die daalt", "Die verdwijnt", "Die blijft altijd 0"], correct: 0 },
+      { question: "Welke stof maken planten als energievoorraad?", answers: ["Suiker", "Benzine", "Zoutzuur", "Koffie"], correct: 0 },
+      { question: "Welke plant doet fotosynthese?", answers: ["Bijna alle groene planten", "Alleen cactussen", "Alleen bomen", "Geen enkele"], correct: 0 },
+      { question: "Waarom is zonlicht belangrijk voor fotosynthese?", answers: ["Het levert energie", "Het maakt geluid", "Het maakt stenen zacht", "Het vervangt water"], correct: 0 },
+      { question: "Waar gaat opgenomen koolstofdioxide heen?", answers: ["Naar de bladeren", "Naar de autoband", "Naar de maan", "Naar de wortelpunt alleen"], correct: 0 },
+      { question: "Welk gas is nuttig voor mensen en komt vrij bij fotosynthese?", answers: ["Zuurstof", "Rook", "Chloor", "Ammoniak"], correct: 0 },
+      { question: "Welke plek heeft vaak huidmondjes voor gasuitwisseling?", answers: ["Blad", "Bloempot", "Takschors buitenkant", "Bloemvaas"], correct: 0 },
+      { question: "Wat gebeurt er met fotosynthese in het donker?", answers: ["Die neemt sterk af", "Die wordt 10x sneller", "Die kleurt blauw", "Die stopt voor altijd"], correct: 0 },
+      { question: "Welke combinatie hoort bij fotosynthese?", answers: ["Water + CO2 + licht", "Melk + suiker + zout", "Lucht + olie + zand", "Stof + plastic + vuur"], correct: 0 },
+      { question: "Wat is koolstofdioxide in formule?", answers: ["CO2", "O2", "H2O", "NaCl"], correct: 0 },
+      { question: "Wat is water in formule?", answers: ["H2O", "CO2", "O3", "Fe"], correct: 0 },
+      { question: "Welke kleur licht gebruiken planten veel voor fotosynthese?", answers: ["Rood en blauw", "Alleen grijs", "Alleen bruin", "Geen licht"], correct: 0 },
+      { question: "Waarom zijn bomen belangrijk voor de lucht?", answers: ["Ze helpen zuurstof maken", "Ze maken meer plastic", "Ze verbruiken alle water", "Ze stoppen wind"], correct: 0 },
+      { question: "Wat doen wortels vooral voor fotosynthese?", answers: ["Water opnemen", "Licht maken", "Suiker verbranden", "Wol groeien"], correct: 0 },
+      { question: "Welke uitspraak is waar?", answers: ["Bladeren helpen bij fotosynthese", "Stenen doen fotosynthese", "Maanlicht maakt suiker in mensen", "Auto's maken chlorofyl"], correct: 0 },
+      { question: "Wanneer werkt fotosynthese het best?", answers: ["Bij voldoende licht en water", "Bij totale droogte", "Zonder lucht", "In een afgesloten doos zonder licht"], correct: 0 },
+      { question: "Wat gebruiken planten om te groeien dat uit fotosynthese komt?", answers: ["Gemaakte suikers", "Motorolie", "Zilver", "Batterijzuur"], correct: 0 },
+      { question: "Wat gebeurt er meestal met de kleur van een gezond blad?", answers: ["Die blijft groen", "Die wordt doorzichtig", "Die wordt metaal", "Die wordt neonpaars"], correct: 0 },
+      { question: "Welke zin klopt?", answers: ["Fotosynthese maakt voedsel voor de plant", "Fotosynthese maakt alleen geluid", "Fotosynthese maakt stenen nat", "Fotosynthese is een soort wind"], correct: 0 },
+      { question: "Waar komt de energie van fotosynthese vandaan?", answers: ["Van de zon", "Van batterijen", "Van asfalt", "Van sneeuw"], correct: 0 },
+      { question: "Wat hebben kamerplanten vaak nodig voor goede fotosynthese?", answers: ["Licht bij een raam", "Een deken", "Een koelkast", "Een speaker"], correct: 0 },
+      { question: "Wat is een simpel resultaat van fotosynthese?", answers: ["Meer plantengroei", "Minder bladeren altijd", "Geen verandering ooit", "Directe ijsvorming"], correct: 0 },
+      { question: "Welke factor kan fotosynthese vertragen?", answers: ["Te weinig licht", "Voldoende water", "Gezonde bladeren", "Goede lucht"], correct: 0 },
+      { question: "Wat doen groene delen van een plant vaak?", answers: ["Licht opvangen", "Water koken", "Metaal smelten", "Zout persen"], correct: 0 },
+      { question: "Welke plant heeft meestal veel fotosynthese?", answers: ["Een plant met veel bladeren", "Een plastic plant", "Een steen", "Een lege pot"], correct: 0 },
+      { question: "Waarom geven planten zuurstof af?", answers: ["Dat ontstaat bij fotosynthese", "Omdat ze lawaai maken", "Omdat ze plastic eten", "Omdat ze geen water willen"], correct: 0 },
+      { question: "Wat gebeurt er vaak als je een plant lang zonder licht zet?", answers: ["Minder fotosynthese", "Meer fotosynthese", "Blad wordt metaal", "Plant wordt een dier"], correct: 0 },
+      { question: "Welke combinatie helpt een plant het meest?", answers: ["Licht, water en lucht", "Rook, zand en plastic", "Donker, droogte en kou", "Zout en olie"], correct: 0 },
+      { question: "Waarvoor gebruikt de plant gemaakte glucose?", answers: ["Voor energie en groei", "Voor wifi", "Voor benzine", "Voor metaal"], correct: 0 }
+    ];
+
+    const scoreEl = document.getElementById("score");
+    const questionEl = document.getElementById("question");
+    const answersEl = document.getElementById("answers");
+    const feedbackEl = document.getElementById("feedback");
+
+    let score = 0;
+    let answered = false;
+    let currentQuestionIndex = -1;
+    let nextTimer = null;
+
+    function updateScore() {
+      scoreEl.textContent = `Score: ${score}`;
+    }
+
+    function getRandomQuestionIndex() {
+      if (questions.length === 1) return 0;
+
+      let newIndex = Math.floor(Math.random() * questions.length);
+      while (newIndex === currentQuestionIndex) {
+        newIndex = Math.floor(Math.random() * questions.length);
+      }
+      return newIndex;
+    }
+
+    function renderQuestion() {
+      if (nextTimer) {
+        clearTimeout(nextTimer);
+        nextTimer = null;
+      }
+
+      currentQuestionIndex = getRandomQuestionIndex();
+      const q = questions[currentQuestionIndex];
+
+      answered = false;
+      feedbackEl.textContent = "";
+      feedbackEl.style.color = "var(--muted)";
+      questionEl.textContent = q.question;
+      answersEl.innerHTML = "";
+
+      q.answers.forEach((answer, index) => {
+        const btn = document.createElement("button");
+        btn.textContent = answer;
+        btn.addEventListener("click", () => selectAnswer(index));
+        answersEl.appendChild(btn);
+      });
+    }
+
+    function selectAnswer(selectedIndex) {
+      if (answered) return;
+      answered = true;
+
+      const q = questions[currentQuestionIndex];
+      const allButtons = Array.from(answersEl.children);
+
+      allButtons.forEach((btn, idx) => {
+        btn.disabled = true;
+        if (idx === q.correct) {
+          btn.classList.add("correct");
+        }
+      });
+
+      if (selectedIndex === q.correct) {
+        score += 1;
+        updateScore();
+        feedbackEl.textContent = "Goed gedaan! Volgende vraag...";
+        feedbackEl.style.color = "var(--ok)";
+      } else {
+        allButtons[selectedIndex].classList.add("wrong");
+        feedbackEl.textContent = "Jammer. Volgende vraag...";
+        feedbackEl.style.color = "var(--bad)";
+      }
+
+      nextTimer = setTimeout(renderQuestion, 1200);
+    }
+
+    updateScore();
+    renderQuestion();
+  </script>
+</body>
+</html>
